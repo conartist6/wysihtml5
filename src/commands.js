@@ -24,7 +24,7 @@ wysihtml5.Commands = Base.extend(
   },
   
   /**
-   * Check whether the browser supports the given command
+   * Execute the given command
    *
    * @param {String} command The command string which to execute (eg. "bold", "italic", "insertUnorderedList")
    * @param {String} [value] The command value parameter, needed for some commands ("createLink", "insertImage", ...), optional for commands that don't require one ("bold", "underline", ...)

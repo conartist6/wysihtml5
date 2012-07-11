@@ -14,19 +14,16 @@
  */
 (function(dom) {
   dom.simulatePlaceholder = function(editor, view, placeholderText) {
-    var CLASS_NAME = "placeholder",
-        unset = function() {
+    var unset = function() {
           if (view.hasPlaceholderSet()) {
             view.clear();
           }
-          view.placeholderSet = false;
-          dom.removeClass(view.element, CLASS_NAME);
+          dom.removeClass(view.element, wysihtml5.PLACEHOLDER_CLASS_NAME);
         },
         set = function() {
           if (view.isEmpty()) {
-            view.placeholderSet = true;
             view.setValue(placeholderText);
-            dom.addClass(view.element, CLASS_NAME);
+            dom.addClass(view.element, wysihtml5.PLACEHOLDER_CLASS_NAME);
           }
         };
 

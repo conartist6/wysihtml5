@@ -81,24 +81,34 @@
   <br><input type="reset" value="Reset form!">
 </form>
 
+<h2>Range:</h2>
+<div id="range"></div>
+
+<h2>Source:</h2>
+<div id="inner"></div>
+
 <h2>Events:</h2>
 <div id="log"></div>
 
 <small>powered by <a href="https://github.com/xing/wysihtml5" target="_blank">wysihtml5</a>.</small>
 
+<script src="js/jquery.min.js"></script>
 <script src="../parser_rules/simple.js"></script>
-<script src="../dist/wysihtml5-0.3.0.js"></script>
+<script src="../dist/wysihtml5-0.3.0.CB.js"></script>
 <script>
   var editor = new wysihtml5.Editor("textarea", {
     toolbar:      "toolbar",
     parserRules:  wysihtml5ParserRules
   });
-  
+
+  var thing
   var log = document.getElementById("log");
+  var inner = document.getElementById("inner");
   
   editor
     .on("load", function() {
-      log.innerHTML += "<div>load</div>";
+	log.innerHTML += "<div>load</div>";
+      inner.innerHTML = $('<div/>').text(editor.getValue()).html();
     })
     .on("focus", function() {
       log.innerHTML += "<div>focus</div>";
@@ -107,6 +117,7 @@
       log.innerHTML += "<div>blur</div>";
     })
     .on("change", function() {
+      //var mark = wysihtml5.selection.getBookmark();
       log.innerHTML += "<div>change</div>";
     })
     .on("paste", function() {
@@ -119,6 +130,25 @@
       log.innerHTML += "<div>undo:composer</div>";
     })
     .on("redo:composer", function() {
-      log.innerHTML += "<div>redo:composer</div>";
+	log.innerHTML += "<div>redo:composer</div>";
     });
+    
+    /*wysihtml5.dom.observe(editor.composer.element, "keyup", function(event)
+    {
+	wysihtml5.views.Composer.parent.fire("change");
+    });
+    /*editor.composer.element.observe("keypress", function() {
+	editor.fire("change");
+    });*/
+
+    setInterval(function()
+    {
+	var r, range = $('#range');
+	r = editor.composer.selection.getRange();
+	range.html(r.startContainer + ":" + r.startOffset + "<br>" +
+	r.endContainer + ":" + r.endOffset + "<br>" +
+	r.toString());
+	inner.innerHTML = $('<div/>').text(editor.composer.getValue()).html();
+    }, 100);
+
 </script>

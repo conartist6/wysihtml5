@@ -55,7 +55,14 @@
     // Whether the composer should allow the user to manually resize images, tables etc.
     allowObjectResizing:  true,
     // Whether the rich text editor should be rendered on touch devices (wysihtml5 >= 0.3.0 comes with basic support for iOS 5)
-    supportTouchDevices:  true
+    supportTouchDevices:  true,
+    // Whether or not the editor should start the document out with a paragraph such that return will continue to create paragraphs
+    paragraphPolicy: "encourage" //How to deal with carriage return presses. The more you like paragraphs, the farther down the list you go!
+    //disallow		// Every carriage return not inside a list will be a <br/>. Remove <p/> from parser rules to to get rid of 'em forever.
+    //allow		// Inside a <p/> a return creates a new <p/>
+    //encourage 	// start with <p/>
+    //force		// do not allow user to backspace/undo/ctrl+a del thru starting <p/>
+
   };
   
   wysihtml5.Editor = wysihtml5.lang.Dispatcher.extend(
@@ -90,7 +97,7 @@
           this.toolbar = new wysihtml5.toolbar.Toolbar(this, this.config.toolbar);
         }
       });
-      
+
       try {
         console.log("Heya! This page is using wysihtml5 for rich text editing. Check out https://github.com/xing/wysihtml5");
       } catch(e) {}

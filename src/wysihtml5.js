@@ -21,6 +21,8 @@ var wysihtml5 = {
   views:      {},
   
   INVISIBLE_SPACE: "\uFEFF",
+  EMPTY_STRING: "<p><br></p>",
+  PLACEHOLDER_CLASS_NAME: "placeholder",
   
   EMPTY_FUNCTION: function() {},
   

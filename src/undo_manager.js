@@ -33,7 +33,7 @@
       this.composer = editor.composer;
       this.element = this.composer.element;
       
-      var initialValue = this.composer.getValue();
+      var initialValue = this.composer.emptyValue;
       this.history = [initialValue];
       this.historyWithCaret = [initialValue];
       this.position = 1;

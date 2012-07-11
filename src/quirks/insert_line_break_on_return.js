@@ -29,6 +29,8 @@
 
     function keyDown(event) {
       var keyCode = event.keyCode;
+      if (event.keyCode == wysihtml5.BACKSPACE_KEY && composer.isEmpty())
+        event.preventDefault;
       if (event.shiftKey || (keyCode !== wysihtml5.ENTER_KEY && keyCode !== wysihtml5.BACKSPACE_KEY)) {
         return;
       }
@@ -66,7 +68,7 @@
         return;
       }
 
-      if (keyCode === wysihtml5.ENTER_KEY && !wysihtml5.browser.insertsLineBreaksOnReturn()) {
+      if (keyCode === wysihtml5.ENTER_KEY) {
         composer.commands.exec("insertLineBreak");
         event.preventDefault();
       }

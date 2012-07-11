@@ -16,11 +16,36 @@
     },
 
     clear: function() {
-      this.element.innerHTML = browser.displaysCaretInEmptyContentEditableCorrectly() ? "" : this.CARET_HACK;
+      if(this.config.paragraphPolicy == "encourage")
+      {
+	this.element.innerHTML = "<p><br/></p>";
+        var range = rangy.createRange(this.doc);
+
+        range.selectNodeContents(this.element);
+        range.collapse();
+        this.selection.setSelection(range);
+
+	//This would have been my preferred method but it leads to a bug in Chrome where an empty editor gaining focus by being clicked in the bottom
+	//half of the editor window (below the initial paragraph) places the curser after the <p/> instead of inside it AND it remains possible to
+	//place the cursor outside the initial <p/> and any newly created ones for the lifetime of the editor. o_O
+        /*var p = document.createElement('p');
+	this.selection.selectNode(this.element);
+        this.selection.surround(p);
+        p.innerHTML = "<br>";*/
+ 
+        //range = rangy.createRange(this.doc)
+        //range.selectNodeContents(p);
+        //range.collapse();
+        //this.selection.setSelection(range);
+        this.selection.selectNode(this.element.children[0]);
+        //this.parent.fire("change");
+      }
+      else
+        this.element.innerHTML = browser.displaysCaretInEmptyContentEditableCorrectly() ? "" : this.CARET_HACK;
     },
 
     getValue: function(parse) {
-      var value = this.isEmpty() ? "" : wysihtml5.quirks.getCorrectInnerHTML(this.element);
+      var value = this.hasPlaceholderSet() ? "" : wysihtml5.quirks.getCorrectInnerHTML(this.element);
       
       if (parse) {
         value = this.parent.parse(value);
@@ -92,15 +117,16 @@
     },
 
     hasPlaceholderSet: function() {
-      return this.getTextContent() == this.textarea.element.getAttribute("placeholder") && this.placeholderSet;
+      return dom.hasClass(this.element, wysihtml5.PLACEHOLDER_CLASS_NAME);
     },
 
     isEmpty: function() {
       var innerHTML               = this.element.innerHTML,
           elementsWithVisualValue = "blockquote, ul, ol, img, embed, object, table, iframe, svg, video, audio, button, input, select, textarea";
-      return innerHTML === ""              || 
-             innerHTML === this.CARET_HACK ||
-             this.hasPlaceholderSet()      ||
+      return innerHTML === ""                || 
+             innerHTML === this.CARET_HACK   ||
+	     innerHTML === this.EMPTY_STRING ||
+             this.hasPlaceholderSet()        ||
              (this.getTextContent() === "" && !this.element.querySelector(elementsWithVisualValue));
     },
 
@@ -190,6 +216,10 @@
       if (!browser.clearsListsInContentEditableCorrectly()) {
         wysihtml5.quirks.ensureProperClearingOfLists(this);
       }
+
+      //If there is a non-empty-string empty value, initialize it.
+      this.clear();
+      this.emptyValue = this.getValue();
 
       // Set up a sync that makes sure that textarea and editor have the same content
       if (this.initSync && this.config.sync) {
