@@ -32,8 +32,7 @@
 	this.selection.selectNode(this.element);
         this.selection.surround(p);
         p.innerHTML = "<br>";*/
- 
-        //this.selection.selectNode(this.element.children[0]);
+	
         //this.parent.fire("change");
       }
       else
