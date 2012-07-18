@@ -16,7 +16,7 @@
     },
 
     clear: function() {
-      if(this.config.paragraphPolicy == "encourage")
+      if(this.config.paragraphPolicy in {"encourage": 0, "force": 0})
       {
 	this.element.innerHTML = "<p><br/></p>";
         var range = rangy.createRange(this.doc);
