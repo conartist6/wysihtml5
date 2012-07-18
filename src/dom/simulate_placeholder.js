@@ -22,7 +22,12 @@
         },
         set = function() {
           if (view.isEmpty()) {
-            view.setValue(placeholderText);
+	    view.element.setAttribute("contenteditable", "false"); //Prevents focus from returning to contentediable when content is changed on blur.
+	    view.clear();
+            //editor.composer.selection.insertHTML(placeholderText); //DOM error 9  
+	    editor.composer.selection.insertNode(document.createTextNode(placeholderText));
+
+	    view.element.setAttribute("contenteditable", "true");
             dom.addClass(view.element, wysihtml5.PLACEHOLDER_CLASS_NAME);
           }
         };

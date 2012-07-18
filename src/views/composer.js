@@ -33,11 +33,7 @@
         this.selection.surround(p);
         p.innerHTML = "<br>";*/
  
-        //range = rangy.createRange(this.doc)
-        //range.selectNodeContents(p);
-        //range.collapse();
-        //this.selection.setSelection(range);
-        this.selection.selectNode(this.element.children[0]);
+        //this.selection.selectNode(this.element.children[0]);
         //this.parent.fire("change");
       }
       else
@@ -125,7 +121,7 @@
           elementsWithVisualValue = "blockquote, ul, ol, img, embed, object, table, iframe, svg, video, audio, button, input, select, textarea";
       return innerHTML === ""                || 
              innerHTML === this.CARET_HACK   ||
-	     innerHTML === this.EMPTY_STRING ||
+	     innerHTML === this.emptyValue   ||
              this.hasPlaceholderSet()        ||
              (this.getTextContent() === "" && !this.element.querySelector(elementsWithVisualValue));
     },
@@ -186,6 +182,10 @@
         dom.addClass(this.iframe, name);
       }
 
+      //If there is a non-empty-string empty value, initialize it.
+      this.clear();
+      this.emptyValue = this.getValue();
+
       // Simulate html5 placeholder attribute on contentEditable element
       var placeholderText = typeof(this.config.placeholder) === "string"
         ? this.config.placeholder
@@ -216,10 +216,6 @@
       if (!browser.clearsListsInContentEditableCorrectly()) {
         wysihtml5.quirks.ensureProperClearingOfLists(this);
       }
-
-      //If there is a non-empty-string empty value, initialize it.
-      this.clear();
-      this.emptyValue = this.getValue();
 
       // Set up a sync that makes sure that textarea and editor have the same content
       if (this.initSync && this.config.sync) {
