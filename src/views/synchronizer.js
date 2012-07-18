@@ -33,12 +33,8 @@
       var textareaValue = this.textarea.getValue();
       if (textareaValue) {
         this.composer.setValue(textareaValue, shouldParseHtml);
-
-        //this.selection.selectNode(this.element.children[0]);
-        var range = rangy.createRange(this.doc);
-	range.selectNodeContents(this.composer.element.children[0]);
-	range.collapse(true);
-	this.composer.selection.setSelection(range);
+	if(this.composer.element.children.length > 0 && this.composer.element.children.nodeName == "P")
+	  this.composer.selection.cursorToNode(this.composer.element.children[0], true);
       } else {
         this.composer.clear();
         this.editor.fire("set_placeholder");

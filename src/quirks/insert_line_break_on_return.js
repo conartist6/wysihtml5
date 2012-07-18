@@ -11,10 +11,14 @@
  */
 (function(wysihtml5) {
   var dom                                           = wysihtml5.dom,
-      USE_NATIVE_LINE_BREAK_WHEN_CARET_INSIDE_TAGS  = ["LI", "P", "H1", "H2", "H3", "H4", "H5", "H6"],
       LIST_TAGS                                     = ["UL", "OL", "MENU"];
   
   wysihtml5.quirks.insertLineBreakOnReturn = function(composer) {
+    var USE_NATIVE_LINE_BREAK_WHEN_CARET_INSIDE_TAGS  = ["LI", "H1", "H2", "H3", "H4", "H5", "H6"];
+    if(composer.config.paragraphPolicy in {"encourage": 0, "force": 0})
+    {
+      USE_NATIVE_LINE_BREAK_WHEN_CARET_INSIDE_TAGS.push("P");
+    }
     function unwrap(selectedNode) {
       var parentElement = dom.getParentElement(selectedNode, { nodeName: ["P", "DIV"] }, 2);
       if (!parentElement) {

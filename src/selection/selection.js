@@ -92,7 +92,7 @@
           isElement       = node.nodeType === wysihtml5.ELEMENT_NODE,
           canHaveHTML     = "canHaveHTML" in node ? node.canHaveHTML : (node.nodeName !== "IMG"),
           content         = isElement ? node.innerHTML : node.data,
-          isEmpty         = (content === "" || content === wysihtml5.INVISIBLE_SPACE),
+          isEmpty         = (content === "" || content === wysihtml5.INVISIBLE_SPACE || content == "<br>"),
           displayStyle    = dom.getStyle("display").from(node),
           isBlockElement  = (displayStyle === "block" || displayStyle === "list-item");
 
@@ -115,6 +115,35 @@
       }
 
       this.setSelection(range);
+      return range;
+    },
+
+    cursorToNode: function(node, before) {
+      var range = this.selectNode(node);
+      range.collapse(before);
+      this.setSelection(range);
+    },
+
+    selectFirstText: function(node, recursing)
+    {
+      var found = false;
+      for(c in node.childNodes)
+      {
+	var child = node.childNodes[c];
+	if(child.nodeType == 3 || (child.nodeType == 1 && child.nodeName == "BR"))
+	{
+	  this.cursorToNode(child, true);
+	  return true;
+	}
+	else
+	  found = found && this.selectFirstText(child, true);
+      }
+      if(!recursing && !found)
+      {
+	  this.cursorToNode(node);
+	  return;
+      }
+      return false;
     },
 
     /**

@@ -19,24 +19,14 @@
       if(this.config.paragraphPolicy in {"encourage": 0, "force": 0})
       {
 	this.element.innerHTML = "<p><br/></p>";
-        var range = rangy.createRange(this.doc);
-
-        range.selectNodeContents(this.element);
-        range.collapse();
-        this.selection.setSelection(range);
-
-	//This would have been my preferred method but it leads to a bug in Chrome where an empty editor gaining focus by being clicked in the bottom
-	//half of the editor window (below the initial paragraph) places the curser after the <p/> instead of inside it AND it remains possible to
-	//place the cursor outside the initial <p/> and any newly created ones for the lifetime of the editor. o_O
-        /*var p = document.createElement('p');
-	this.selection.selectNode(this.element);
-        this.selection.surround(p);
-        p.innerHTML = "<br>";*/
-	
-        //this.parent.fire("change");
       }
       else
-        this.element.innerHTML = browser.displaysCaretInEmptyContentEditableCorrectly() ? "" : this.CARET_HACK;
+      {
+        //this.element.innerHTML = browser.displaysCaretInEmptyContentEditableCorrectly() ? "" : this.CARET_HACK;
+	this.element.innerHTML = this.CARET_HACK;
+      }
+      this.selection.selectFirstText(this.element);
+      //this.parent.fire("change");
     },
 
     getValue: function(parse) {
